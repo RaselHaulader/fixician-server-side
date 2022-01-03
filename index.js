@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
         const result = await servicesCollection.find({}).toArray();
         res.json(result);
       })
-  
+      
     } finally {
   
     }
