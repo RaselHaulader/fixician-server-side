@@ -10,8 +10,11 @@ app.use(express.json());
 app.use(cors());
 app.use(express.json());
 
-
-const uri = `mongodb+srv://${'user'}:${'pass'}@cluster0.x89oq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+/* 
+user: fixician
+pass: 5UKCKFKd7b7CvIq4
+*/
+const uri = `mongodb+srv://fixician:5UKCKFKd7b7CvIq4@cluster0.x89oq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.get('/', (req, res) => {
@@ -22,14 +25,13 @@ app.get('/', (req, res) => {
     try {
       await client.connect();
       console.log('connected to db');
+      const fixician = client.db("Fxician");
+      const servicesCollection =  fixician.collection('services')
       
       app.get('/allServices', async (req, res) => {
-        const query = propertiesCollection.find({})
-        const result = await query.toArray();
-        res.json(result)
+        const result = await servicesCollection.find({}).toArray();
+        res.json(result);
       })
-
-
   
     } finally {
   
@@ -37,6 +39,10 @@ app.get('/', (req, res) => {
   }
   run().catch(console.dir);
 
+  app.get('/', (req, res) => {
+    res.send('hello')
+  })
+  
 
 
   app.listen(port, () => {
