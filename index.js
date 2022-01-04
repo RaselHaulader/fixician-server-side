@@ -31,6 +31,8 @@ async function run() {
     const fixician = client.db("Fxician");
     const servicesCollection = fixician.collection("services");
     const usersCollection = fixician.collection("users");
+    const orderCollection = fixician.collection("usersOrder");
+    const reviewCollection = fixician.collection("review");
 
     app.get("/allServices", async (req, res) => {
       const result = await servicesCollection.find({}).toArray();
@@ -47,15 +49,62 @@ async function run() {
       // console.log(service);
     });
 
-     // save user
-     app.post('/saveUser', async (req, res) => {
-      const user = req.body
-      const filter = { email: user.email }
-      const updateDoc = { $set: { name: user.name } }
-      const option = { upsert: true }
+    // save user
+    app.post("/saveUser", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = { $set: { name: user.name } };
+      const option = { upsert: true };
       const result = await usersCollection.updateOne(filter, updateDoc, option);
       res.json(result);
-    })
+    });
+
+    // save user get
+    app.get("/saveUser", async (req, res) => {
+      const result = await usersCollection.find({}).toArray();
+      res.json(result);
+    });
+
+    //Create A users Order Api
+    app.post("/usersOrder", async (req, res) => {
+      const data = req.body;
+      const result = await orderCollection.insertOne(data);
+      res.send(result);
+      // console.log(result);
+    });
+
+    //My Order Get Api With Email
+    app.get("/usersOrder/:email", async (req, res) => {
+      const result = await orderCollection
+        .find({
+          email: req.params.email,
+        })
+        .toArray();
+      res.send(result);
+    });
+
+    //Delete The Order Api
+    app.delete("/deleteOrder/:id", async (req, res) => {
+      // console.log(req.params.id);
+      const result = await orderCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
+
+    //POST REVIEW API
+    app.post("/review", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    //GET REVIEW API
+    app.get("/review", async (req, res) => {
+      const result = await reviewCollection.find({}).toArray();
+      res.send(result);
+      // console.log(result);
+    });
   } finally {
   }
 }
