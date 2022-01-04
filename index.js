@@ -14,7 +14,7 @@ app.use(express.json());
 user: fixician
 pass: 5UKCKFKd7b7CvIq4
 */
-const uri = `mongodb+srv://fixician:5UKCKFKd7b7CvIq4@cluster0.x89oq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.x89oq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
